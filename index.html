@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RAG System - Simplified</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        nav {
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        h2 {
+            color: #333;
+        }
+        .upload-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .upload-form input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .chat-box {
+            background-color: #fff;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #e9f8ff;
+            border-radius: 5px;
+        }
+        form input[type="text"] {
+            width: calc(100% - 90px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#" onclick="navigate('upload')">Upload Document</a>
+    <a href="#" onclick="navigate('chat')">Chat with AI</a>
+</nav>
+
+<div class="container">
+    <div id="page-content"></div>
+</div>
+
+<script>
+    const routes = {
+        'upload': `
+            <h2>Upload Document</h2>
+            <form class="upload-form" id="uploadForm" enctype="multipart/form-data">
+                <input type="file" name="file" required />
+                <button type="submit">Upload</button>
+            </form>
+            <p id="status"></p>
+        `,
+        'chat': `
+            <h2>Chat with Your Document</h2>
+            <div class="chat-box" id="chatBox">
+                <div class="message">Hello! I'm your document assistant. Ask me anything about your uploaded documents.</div>
+            </div>
+            <form id="chatForm">
+                <input type="text" id="userInput" placeholder="Ask a question..." required />
+                <button type="submit">Send</button>
+            </form>
+        `
+    };
+
+    function navigate(page) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        const contentDiv = document.getElementById('page-content');
+        contentDiv.innerHTML = `<div class="section active">${routes[page]}</div>`;
+        
+        if (page === 'chat') {
+            setupChat();
+        } else if (page === 'upload') {
+            setupUpload();
+        }
+    }
+
+    function setupUpload() {
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            }).then(res => res.text())
+              .then(data => {
+                document.getElementById('status').textContent = data;
+            });
+        });
+    }
+
+    function setupChat() {
+        document.getElementById('chatForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message';
+            userMessage.textContent = 'You: ' + input.value;
+            chatBox.appendChild(userMessage);
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: input.value })
+            }).then(res => res.json())
+              .then(data => {
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message';
+                botMessage.textContent = 'AI: ' + data.answer;
+                chatBox.appendChild(botMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+
+            input.value = '';
+        });
+    }
+
+    // Initialize page
+    navigate('upload');
+</script>
+
+</body>
+</html>

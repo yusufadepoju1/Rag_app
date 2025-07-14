@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat with AI</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    "
+  >
+    <div
+      style="
+        background-color: white;
+        width: 500px;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <h2 style="text-align: center; color: #333">Chat with Your Document</h2>
+
+      <div
+        id="chatBox"
+        style="
+          background-color: #f9f9f9;
+          padding: 15px;
+          height: 300px;
+          overflow-y: auto;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          margin-top: 10px;
+        "
+      >
+        <div
+          class="message"
+          style="
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #e9f8ff;
+            border-radius: 5px;
+          "
+        >
+          Hello! I'm your document assistant. Ask me anything.
+        </div>
+      </div>
+
+      <form id="chatForm" style="margin-top: 15px">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Ask a question..."
+          required
+          style="
+            width: calc(100% - 90px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          "
+        />
+        <button
+          type="submit"
+          style="
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          "
+        >
+          Send
+        </button>
+      </form>
+
+      <div style="margin-top: 20px; text-align: center">
+        <a
+          href="/upload"
+          style="text-decoration: none; color: #3b82f6; font-weight: bold"
+          >← Back to Upload</a
+        >
+      </div>
+    </div>
+
+    <script>
+      const chatForm = document.getElementById("chatForm");
+      const chatBox = document.getElementById("chatBox");
+      chatForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const input = document.getElementById("userInput");
+        const userMessage = document.createElement("div");
+        userMessage.className = "message";
+        userMessage.style =
+          "margin: 10px 0; padding: 8px; background-color: #d1e7dd; border-radius: 5px;";
+        userMessage.textContent = "You: " + input.value;
+        chatBox.appendChild(userMessage);
+
+        fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: input.value }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const botMessage = document.createElement("div");
+            botMessage.className = "message";
+            botMessage.style =
+              "margin: 10px 0; padding: 8px; background-color: #fcefc7; border-radius: 5px;";
+            botMessage.textContent = "AI: " + data.answer;
+            chatBox.appendChild(botMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+          });
+
+        input.value = "";
+      });
+    </script>
+  </body>
+</html>
