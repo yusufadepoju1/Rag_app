@@ -137,8 +137,6 @@ rich==14.0.0
 rpds-py==0.26.0
 rsa==4.9.1
 safetensors==0.5.3
-scikit-learn==1.7.0
-scipy==1.15.3
 sentence-transformers==5.0.0
 shellingham==1.5.4
 six==1.17.0
@@ -152,7 +150,6 @@ threadpoolctl==3.6.0
 tiktoken==0.9.0
 tokenizers==0.21.2
 tomli==2.2.1
-torch==2.7.1
 tqdm==4.67.1
 transformers==4.53.1
 typer==0.16.0
