@@ -90,13 +90,6 @@ sentence-transformers
 
 ---
 
-## Future Improvements
 
-- PDF text preview
-- Multi-user support
-- Delete uploaded files
-- Conversation history
-- RAG chain optimization with metadata
 
----
 
