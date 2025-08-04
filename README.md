@@ -63,12 +63,11 @@ Then go to: (http://127.0.0.1:5000)
 ```
 rag_app/
 ├── app.py
-├── uploads/                # Uploaded files stored here
+├── uploads/             
 ├── templates/
-│   ├── upload.html         # Upload UI
-│   └── chat.html           # Chat UI
-├── static/                 # Optional for icons or styles
-├── .env                    # API keys
+│   ├── upload.html        
+│   └── chat.html           
+├── .env                    
 ├── requirements.txt
 └── README.md
 ```
@@ -100,3 +99,4 @@ sentence-transformers
 - RAG chain optimization with metadata
 
 ---
+
