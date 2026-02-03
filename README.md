@@ -66,7 +66,8 @@ rag_app/
 ├── uploads/             
 ├── templates/
 │   ├── upload.html        
-│   └── chat.html           
+│   └── chat.html
+|   ├── index.html          
 ├── .env                    
 ├── requirements.txt
 └── README.md
@@ -89,6 +90,7 @@ sentence-transformers
 > These are included in the `requirements.txt`
 
 ---
+
 
 
 
